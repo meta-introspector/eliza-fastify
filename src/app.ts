@@ -8,13 +8,60 @@ import fastifySwagger from "@fastify/swagger"
 import fastifySwaggerUI from "@fastify/swagger-ui"
 import path from "path"
 import hyperid from "hyperid"
-import { NodeTracerProvider } from "@opentelemetry/sdk-trace-node"
+import {
+	NodeTracerProvider,
+	SimpleSpanProcessor,
+} from "@opentelemetry/sdk-trace-node"
 import { registerInstrumentations } from "@opentelemetry/instrumentation"
 import { HttpInstrumentation } from "@opentelemetry/instrumentation-http"
 import { FastifyInstrumentation } from "@opentelemetry/instrumentation-fastify"
+import { ZipkinExporter } from "@opentelemetry/exporter-zipkin"
 
-import { init as initRedis } from "@/adapters/redis"
-import { init as initRabbitMQ } from "@/adapters/rabbitMQ"
+//Specify zipkin url. default url is http://localhost:9411/api/v2/spans
+// docker run -d -p 9411:9411 openzipkin/zipkin
+const zipkinUrl = "http://localhost"
+const zipkinPort = "9411"
+const zipkinPath = "/api/v2/spans"
+const zipkinURL = `${zipkinUrl}:${zipkinPort}${zipkinPath}`
+const options2 = {
+	headers: {
+		module: "mainai16z",
+	},
+	url: zipkinURL,
+	serviceName: "ai16z",
+	// optional interceptor
+	getExportRequestHeaders: () => {
+		return {
+			module: "mainai16z",
+		}
+	},
+}
+const traceExporter_zipkin = new ZipkinExporter(options2)
+import { ConsoleSpanExporter } from "@opentelemetry/sdk-trace-node"
+import { Resource } from "@opentelemetry/resources"
+import {
+	ATTR_SERVICE_NAME,
+	ATTR_SERVICE_VERSION,
+} from "@opentelemetry/semantic-conventions"
+const traceExporter = new ConsoleSpanExporter()
+const serviceName = "eliza-agent"
+
+const txz = new SimpleSpanProcessor(traceExporter_zipkin)
+//const tx=new SimpleSpanProcessor(traceExporter);
+
+const provider = new NodeTracerProvider({
+	resource: new Resource({
+		[ATTR_SERVICE_NAME]: serviceName,
+		[ATTR_SERVICE_VERSION]: "1.0",
+	}),
+	spanProcessors: [
+		txz,
+		//tx
+	],
+})
+
+//import { init as initRedis } from "@/adapters/redis"
+//import { init as initRabbitMQ } from "@/adapters/rabbitMQ"
 // import { IncomingMessage, ServerResponse } from "http"
 
 const envToLogger = {
@@ -150,13 +197,28 @@ void fastifySetup.register(fastifySwaggerUI, {
 	},
 })
 
-const provider = new NodeTracerProvider()
+//const provider = new NodeTracerProvider()
 
 provider.register()
-
+import { getNodeAutoInstrumentations } from "@opentelemetry/auto-instrumentations-node"
+import { PinoInstrumentation } from "@opentelemetry/instrumentation-pino"
 registerInstrumentations({
-	instrumentations: [new HttpInstrumentation(), new FastifyInstrumentation()],
+	instrumentations: [
+		getNodeAutoInstrumentations(),
+		new PinoInstrumentation(),
+		new HttpInstrumentation({
+			requestHook: (span, request) => {
+				span.setAttribute("request", JSON.stringify(request))
+			},
+			responseHook: (span, response) => {},
+		}),
+		new FastifyInstrumentation(),
+	],
 })
+
+//registerInstrumentations({
+//	instrumentations: [new HttpInstrumentation(), new FastifyInstrumentation()],
+//})
 
 void fastifySetup.register(autoLoad, {
 	dir: path.join(__dirname, "/plugins"),
@@ -169,8 +231,8 @@ void fastifySetup.register(autoLoad, {
 
 const start = async () => {
 	try {
-		await initRedis()
-		await initRabbitMQ()
+		//		await initRedis()
+		//		await initRabbitMQ()
 		const port = Number(process.env.API_PORT ?? 3000)
 		await fastifySetup.listen({
 			host: "0.0.0.0",
