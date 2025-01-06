@@ -4,6 +4,7 @@ import fastify, {
 	// FastifyReply,
 } from "fastify"
 import autoLoad from "@fastify/autoload"
+import fastifyPrintRoutes from "fastify-print-routes"
 import fastifySwagger from "@fastify/swagger"
 import fastifySwaggerUI from "@fastify/swagger-ui"
 import path from "path"
@@ -47,17 +48,14 @@ const traceExporter = new ConsoleSpanExporter()
 const serviceName = "eliza-agent"
 
 const txz = new SimpleSpanProcessor(traceExporter_zipkin)
-//const tx=new SimpleSpanProcessor(traceExporter);
+const tx = new SimpleSpanProcessor(traceExporter)
 
 const provider = new NodeTracerProvider({
 	resource: new Resource({
 		[ATTR_SERVICE_NAME]: serviceName,
 		[ATTR_SERVICE_VERSION]: "1.0",
 	}),
-	spanProcessors: [
-		txz,
-		//tx
-	],
+	spanProcessors: [txz, tx],
 })
 
 //import { init as initRedis } from "@/adapters/redis"
@@ -127,6 +125,8 @@ export const options: FastifyServerOptions = {
 }
 
 const fastifySetup = fastify(options)
+
+void fastifySetup.register(fastifyPrintRoutes)
 
 void fastifySetup.register(fastifySwagger, {
 	openapi: {
