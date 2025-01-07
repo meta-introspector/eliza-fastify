@@ -57,17 +57,17 @@ void (async function () {
 		bundle: true,
 		entryPoints: tsfiles,
 		format: "cjs",
-		logLevel: "info",
-		minify: true,
-		minifyIdentifiers: true,
-		minifyWhitespace: true,
+		logLevel: "debug",
+		minify: false,
+		minifyIdentifiers: false,
+		minifyWhitespace: false,
 		outdir: "dist",
 		platform: "node",
 		plugins: [
 			esbuildPluginPino({ transports: ["pino-pretty"] }), // DOES THIS NEED TO BE HERE FOR PRODUCTION? OR IS IT ONLY NECESSARY FOR DEVELOPMENT?
 			esbuildPluginFastifySwaggerUi(),
 		],
-		sourcemap: false,
+		sourcemap: true,
 		tsconfig: "tsconfig.production.json",
 	}
 	const args = process.argv.slice(2)
