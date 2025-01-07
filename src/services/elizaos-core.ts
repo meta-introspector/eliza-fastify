@@ -7,6 +7,8 @@ export class CacheManager {}
 export class ModelProviderName {}
 export const settings = {}
 export const defaultCharacter = {}
-export const elizaLogger = {}
+import { logger } from "@/lib/logger"
+export const elizaLogger = logger
+
 export function stringToUuid() {}
 export function validateCharacterConfig() {}
