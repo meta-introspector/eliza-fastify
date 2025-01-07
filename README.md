@@ -2,6 +2,30 @@
 
 `pnpm rebuild better-sqlite3`
 
+NODE_BINDINGS_ARROW
+export NODE_ENV=dev
+
+`ltrace -f -s9999 -o lt /home/mdupont/.config/nvm/versions/node/v23.5.0/bin/node dist/app.js`
+
+`strace -f  -o str -s999 pnpm dev`
+
+if you see 
+`TypeError: E$e.tracingChannel is not a function` 
+use `nvm use 23`
+
+```
+2025-01-07T19:25:40.919Z - error: Error starting agent for character undefined: Could not locate the bindings file. Tried:
+ → /mnt/data1/nix/time/2025/01/06/eliza-fastify/build/better_sqlite3.node
+```
+
+out of depair:
+```
+    find -name better_sqlite3.node
+    mkdir -p /mnt/data1/nix/time/2025/01/06/eliza-fastify/build/
+    cp ./node_modules/.pnpm/better-sqlite3@11.7.2/node_modules/better-sqlite3/build/Release/better_sqlite3.node /mnt/data1/nix/time/2025/01/06/eliza-fastify/build/
+    /home/mdupont/.config/nvm/versions/node/v23.5.0/bin/node dist/app.js
+  ```
+
 # Fastify template
 
 <p align="center">This project template serves as a starting point for building efficient and scalable server-side applications with <a href="https://fastify.dev/" target="_blank">Fastify</a>, <a href="https://www.typescriptlang.org/" target="_blank">TypeScript</a>, and best practices in place. It comes pre-configured with essential tools to ensure code quality, maintainability, and a streamlined development workflow.</p>

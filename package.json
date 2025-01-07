@@ -114,6 +114,7 @@
 		"globals": "^15.12.0",
 		"hyperid": "^3.3.0",
 		"istanbul-merge": "^2.0.0",
+		"node-gyp": "^11.0.0",
 		"nyc": "^17.1.0",
 		"plugin-ferePro": "link:vendor/github/elizaos/eliza/packages/plugin-ferePro",
 		"readable-stream": "^4.5.2",
