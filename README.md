@@ -96,3 +96,8 @@ docker compose --profile=PROFILE up --build -d && docker compose --profile=PROFI
 ## License
 
 This project is licensed under the MIT License. Feel free to customize and use it for your own projects.
+
+
+
+## debug 
+esbuild  --bundle --log-level=verbose src/controllers/agent-message.ts

@@ -1,0 +1,3 @@
+[submodule "vendor/github/elizaos/eliza"]
+	path = vendor/github/elizaos/eliza
+	url = https://github.com/elizaOS/eliza

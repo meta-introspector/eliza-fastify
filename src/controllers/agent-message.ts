@@ -8,15 +8,21 @@ import { logger } from "@/lib/logger"
 //import notesService from "@/services/notes"
 import { FastifyRequestSchemaTypes } from "@/src/models/types/schemaBuilderTypeExtractor"
 
+//import { SpanExporter Span } from '@opentelemetry/sdk-trace-base';
+
+// now import eliza herself
+import { start } from "@elizaos/agent"
+
 export const postAgentMessageHandler = async (
 	req: FastifyRequestSchemaTypes<
 		typeof agentMessageValidator.postAgentMessage
 	>,
 	res: FastifyReply,
 ) => {
+	start()
 	return await tracer.startActiveSpan(
 		"postAgentMessageHandler",
-		async (span: Span) => {
+		async (span: any) => {
 			span.setAttribute("query", JSON.stringify(req.query))
 			span.setAttribute("body", JSON.stringify(req.body))
 			span.setAttribute("params", JSON.stringify(req.params))
@@ -33,6 +39,7 @@ export const postAgentMessageHandler = async (
 				})
 			}
 			span.end()
+			return
 		},
 	)
 }
