@@ -1,1 +1,4 @@
-export class RedisClient {}
+export class RedisClient {
+	constructor(connectionConfig: any) {}
+	async init() {}
+}

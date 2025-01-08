@@ -6,7 +6,7 @@ import agentMessageValidator from "@/validators/agent-message"
 import { logger } from "@/lib/logger"
 import { FastifyRequestSchemaTypes } from "@/src/models/types/schemaBuilderTypeExtractor"
 //import { SpanExporter Span } from '@opentelemetry/sdk-trace-base';
-import { start } from "@elizaos/agent"
+//import { start } from "@elizaos/agent"
 
 export const postAgentMessageHandler = async (
 	req: FastifyRequestSchemaTypes<
@@ -33,7 +33,8 @@ export const postAgentMessageHandler = async (
 
 			try {
 				try {
-					start()
+					// start()
+					// fixme call agent
 				} catch (err) {
 					console.log(err)
 					//logger.error(err);
