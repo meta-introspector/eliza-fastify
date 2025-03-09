@@ -31,7 +31,20 @@
 			"@/test/*": ["src/test/*"],
 			"@/types/*": ["src/models/types/*"],
 			"@/utils/*": ["src/utils/*"],
-			"@/validators/*": ["src/models/validators/*"]
+			"@/validators/*": ["src/models/validators/*"],
+			"@elizaos/agent/*": ["vendor/github/elizaos/eliza/agent/src/*"],
+			"@elizaos/adapter-postgres/*": [
+				"vendor/github/elizaos/eliza/packages/adapter-postgres/*"
+			],
+			"@elizaos/adapter-sqlite/*": [
+				"vendor/github/elizaos/eliza/packages/adapter-sqlite/*"
+			],
+			"@elizaos/client-auto/*": [
+				"vendor/github/elizaos/eliza/packages/client-auto/*"
+			],
+			"@elizaos/client-discord/*": [
+				"vendor/github/elizaos/eliza/packages/client-discord/*"
+			]
 		},
 		"pretty": true,
 		"removeComments": true,

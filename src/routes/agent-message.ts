@@ -3,7 +3,7 @@ import { agentMessage, postAgentMessage } from "@/validators/agent-message"
 import { FastifyInstance } from "fastify"
 
 export default (fastify: FastifyInstance) => {
-	//  console.log("Hello!")
+	console.log("Hello!")
 	fastify.route({
 		handler: postAgentMessageHandler,
 		method: "POST",
